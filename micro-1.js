@@ -120,7 +120,7 @@ store.on('pmessage', (pattern, channel, message) => {
   test.publish('test', 'kkkkkkkkk')
 })
 
-store.psubscribe('*')
+store.psubscribe('R*')
 
 app.get('/microdemo',(req, res) => {
   const sub = __WEBPACK_IMPORTED_MODULE_1_redis___default.a.createClient(__WEBPACK_IMPORTED_MODULE_2__config__["a" /* default */])
