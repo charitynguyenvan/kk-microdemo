@@ -117,7 +117,9 @@ const test = __WEBPACK_IMPORTED_MODULE_1_redis___default.a.createClient(__WEBPAC
 store.on('pmessage', (pattern, channel, message) => {
   console.log(pattern, channel, message)
 
-  test.publish('test', 'kkkkkkkkk')
+  test.publish('test', {
+    'charity': 'is testing'
+  })
 })
 
 store.psubscribe('R*')
