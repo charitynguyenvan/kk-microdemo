@@ -116,6 +116,7 @@ sub.on('message', (channel, message) => {
 })
 
 sub.subscribe('Request')
+sub.subscribe('test')
 
 
 /***/ })

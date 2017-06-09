@@ -110,6 +110,18 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 const app = __WEBPACK_IMPORTED_MODULE_0_express___default()()
 
+
+const store = __WEBPACK_IMPORTED_MODULE_1_redis___default.a.createClient(__WEBPACK_IMPORTED_MODULE_2__config__["a" /* default */])
+const test = __WEBPACK_IMPORTED_MODULE_1_redis___default.a.createClient(__WEBPACK_IMPORTED_MODULE_2__config__["a" /* default */])
+
+store.on('pmessage', (pattern, channel, message) => {
+  console.log(pattern, channel, message)
+
+  test.publish('test', 'kkkkkkkkk')
+})
+
+store.psubscribe('*')
+
 app.get('/microdemo',(req, res) => {
   const sub = __WEBPACK_IMPORTED_MODULE_1_redis___default.a.createClient(__WEBPACK_IMPORTED_MODULE_2__config__["a" /* default */])
   const pub = __WEBPACK_IMPORTED_MODULE_1_redis___default.a.createClient(__WEBPACK_IMPORTED_MODULE_2__config__["a" /* default */])
@@ -142,6 +154,7 @@ app.get('/microdemo',(req, res) => {
 
   sub.subscribe('Response')
 })
+
 
 app.listen(1234)
 
