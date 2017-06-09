@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/charitynguyenvan/kk-microdemo#readme",
   "dependencies": {
+    "aws-serverless-express": "^3.0.2",
     "express": "^4.15.3",
     "redis": "^2.7.1",
     "webpack-node-externals": "^1.6.0"

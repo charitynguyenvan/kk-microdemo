@@ -87,34 +87,65 @@ const config = {
 module.exports = require("redis");
 
 /***/ }),
-/* 2 */,
+/* 2 */
+/***/ (function(module, exports) {
+
+module.exports = require("express");
+
+/***/ }),
 /* 3 */,
 /* 4 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_redis__ = __webpack_require__(1);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_redis___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_redis__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__config__ = __webpack_require__(0);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_express__ = __webpack_require__(2);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_express___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_express__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_redis__ = __webpack_require__(1);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_redis___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_redis__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__config__ = __webpack_require__(0);
 
 
 
-const sub = __WEBPACK_IMPORTED_MODULE_0_redis___default.a.createClient(__WEBPACK_IMPORTED_MODULE_1__config__["a" /* default */])
-const pub = __WEBPACK_IMPORTED_MODULE_0_redis___default.a.createClient(__WEBPACK_IMPORTED_MODULE_1__config__["a" /* default */])
 
-sub.on('message', (channel, message) => {
-  console.log(channel, JSON.parse(message))
-  if(channel === 'Request') {
-    if(Math.random() < 0.5) {
-      pub.publish('Response', 'OK')
+const app = __WEBPACK_IMPORTED_MODULE_0_express___default()()
+
+app.get('/microdemo',(req, res) => {
+  const sub = __WEBPACK_IMPORTED_MODULE_1_redis___default.a.createClient(__WEBPACK_IMPORTED_MODULE_2__config__["a" /* default */])
+  const pub = __WEBPACK_IMPORTED_MODULE_1_redis___default.a.createClient(__WEBPACK_IMPORTED_MODULE_2__config__["a" /* default */])
+
+  const p1 = req.query.p1
+  const p2 = req.query.p2
+
+  pub.publish('Request', JSON.stringify({
+    p1,
+    p2
+  }))
+
+  sub.on('message', (channel, message) => {
+    console.log(channel, message)
+
+    if(message == 'OK') {
+      res.json({
+        'hello': 'World'
+      })
     } else {
-      pub.publish('Response', 'KO OK')
+      res.json({
+        'goodbye': 'World'
+      })
     }
-  }
+
+    sub.unsubscribe()
+    sub.quit()
+    pub.quit()
+  })
+
+  sub.subscribe('Response')
 })
 
-sub.subscribe('Request')
+app.listen(1234)
+
+// export default app
 
 
 /***/ })
