@@ -1,11 +1,12 @@
-const express = require('express')
+import express from 'express'
+import redis from 'redis'
+import config from './config'
+
 const app = express()
-const redis = require('redis')
-const config = require('./config')
 
 app.get('/microdemo',(req, res) => {
-  const sub = redis.createClient(config.PORT)
-  const pub = redis.createClient(config.HOST)
+  const sub = redis.createClient(config)
+  const pub = redis.createClient(config)
 
   const p1 = req.query.p1
   const p2 = req.query.p2
@@ -36,4 +37,4 @@ app.get('/microdemo',(req, res) => {
   sub.subscribe('Response')
 })
 
-app.listen(3000)
+app.listen(1234)
