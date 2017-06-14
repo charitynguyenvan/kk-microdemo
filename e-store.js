@@ -63,7 +63,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 3);
+/******/ 	return __webpack_require__(__webpack_require__.s = 7);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -72,8 +72,8 @@
 
 "use strict";
 const config = {
-    host: 'kajkai-redis.xqeh4j.0001.apse1.cache.amazonaws.com',
-    // host: 'localhost',
+    // host: 'kajkai-redis.xqeh4j.0001.apse1.cache.amazonaws.com',
+    host: 'localhost',
     port: 6379
 }
 
@@ -88,7 +88,11 @@ module.exports = require("redis");
 
 /***/ }),
 /* 2 */,
-/* 3 */
+/* 3 */,
+/* 4 */,
+/* 5 */,
+/* 6 */,
+/* 7 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -102,6 +106,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 const sub = __WEBPACK_IMPORTED_MODULE_0_redis___default.a.createClient(__WEBPACK_IMPORTED_MODULE_1__config__["a" /* default */])
 
 sub.on('pmessage', (pattern, channel, message) => {
+  //save this to event-store table
   console.log(pattern, channel, message)
 })
 

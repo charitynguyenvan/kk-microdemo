@@ -1,4 +1,4 @@
-/******/ (function(modules) { // webpackBootstrap
+(function(e, a) { for(var i in a) e[i] = a[i]; }(exports, /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
 /******/
@@ -63,7 +63,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 8);
+/******/ 	return __webpack_require__(__webpack_require__.s = 3);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -71,84 +71,54 @@
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-const config = {
-    // host: 'kajkai-redis.xqeh4j.0001.apse1.cache.amazonaws.com',
-    host: 'localhost',
-    port: 6379
-}
-
-/* harmony default export */ __webpack_exports__["a"] = (config);
-
-
-/***/ }),
-/* 1 */
-/***/ (function(module, exports) {
-
-module.exports = require("redis");
-
-/***/ }),
-/* 2 */,
-/* 3 */,
-/* 4 */,
-/* 5 */
-/***/ (function(module, exports) {
-
-module.exports = require("express");
-
-/***/ }),
-/* 6 */
-/***/ (function(module, exports) {
-
-module.exports = require("uuid/v4");
-
-/***/ }),
-/* 7 */,
-/* 8 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_express__ = __webpack_require__(5);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_express__ = __webpack_require__(4);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_express___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_express__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_redis__ = __webpack_require__(1);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_redis__ = __webpack_require__(5);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_redis___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_redis__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__config__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_uuid_v4__ = __webpack_require__(6);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_uuid_v4___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3_uuid_v4__);
-
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__config__ = __webpack_require__(2);
 
 
 
 
 const app = __WEBPACK_IMPORTED_MODULE_0_express___default()()
 
-console.log('fsfs', __WEBPACK_IMPORTED_MODULE_3_uuid_v4___default()());
 
 const store = __WEBPACK_IMPORTED_MODULE_1_redis___default.a.createClient(__WEBPACK_IMPORTED_MODULE_2__config__["a" /* default */])
 const test = __WEBPACK_IMPORTED_MODULE_1_redis___default.a.createClient(__WEBPACK_IMPORTED_MODULE_2__config__["a" /* default */])
 
-app.get('/microdemo', (req, res) => {
+store.on('pmessage', (pattern, channel, message) => {
+  console.log(pattern, channel, message)
+
+  test.publish('test', JSON.stringify({
+    'charity': 'is testing'
+  }))
+})
+
+store.psubscribe('R*')
+
+app.get('/microdemo',(req, res) => {
   const sub = __WEBPACK_IMPORTED_MODULE_1_redis___default.a.createClient(__WEBPACK_IMPORTED_MODULE_2__config__["a" /* default */])
   const pub = __WEBPACK_IMPORTED_MODULE_1_redis___default.a.createClient(__WEBPACK_IMPORTED_MODULE_2__config__["a" /* default */])
 
-  const { a, b } = req.query
-  const eventId = __WEBPACK_IMPORTED_MODULE_3_uuid_v4___default()()
+  const p1 = req.query.p1
+  const p2 = req.query.p2
 
-  console.log(a, b);
-
-  pub.publish('ch1', JSON.stringify({
-    eventId,
-    a,
-    b
+  pub.publish('Request', JSON.stringify({
+    p1,
+    p2
   }))
 
   sub.on('message', (channel, message) => {
     console.log(channel, message)
 
     if(message == 'OK') {
-      res.send(message)
+      res.json({
+        'hello': 'World'
+      })
     } else {
-      res.send(message)
+      res.json({
+        'goodbye': 'World'
+      })
     }
 
     sub.unsubscribe()
@@ -156,14 +126,65 @@ app.get('/microdemo', (req, res) => {
     pub.quit()
   })
 
-  sub.subscribe('ch1.' + eventId)
+  sub.subscribe('Response')
 })
 
 
 app.listen(1234)
 
-/* harmony default export */ __webpack_exports__["default"] = (app);
+/* harmony default export */ __webpack_exports__["a"] = (app);
 
+
+/***/ }),
+/* 1 */
+/***/ (function(module, exports) {
+
+module.exports = require("aws-serverless-express");
+
+/***/ }),
+/* 2 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+const config = {
+    host: 'kajkai-redis.xqeh4j.0001.apse1.cache.amazonaws.com',
+    // host: 'localhost',
+    port: 6379
+}
+
+/* harmony default export */ __webpack_exports__["a"] = (config);
+
+
+/***/ }),
+/* 3 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_aws_serverless_express__ = __webpack_require__(1);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_aws_serverless_express___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_aws_serverless_express__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__service_1__ = __webpack_require__(0);
+
+
+const server = __WEBPACK_IMPORTED_MODULE_0_aws_serverless_express___default.a.createServer(__WEBPACK_IMPORTED_MODULE_1__service_1__["a" /* default */])
+const handler = (event, context) => {
+  console.log("EVENT: " + JSON.stringify(event))
+  __WEBPACK_IMPORTED_MODULE_0_aws_serverless_express___default.a.proxy(server, event, context)
+}
+/* harmony default export */ __webpack_exports__["default"] = (handler);
+
+
+/***/ }),
+/* 4 */
+/***/ (function(module, exports) {
+
+module.exports = require("express");
+
+/***/ }),
+/* 5 */
+/***/ (function(module, exports) {
+
+module.exports = require("redis");
 
 /***/ })
-/******/ ]);
+/******/ ])));
